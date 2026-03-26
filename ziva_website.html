@@ -1,0 +1,2424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ziva — All Day Fine Dining | Amritsar</title>
+  <link rel="icon" type="image/png" href="assets/img/ziva%20logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&family=Cinzel:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ─── CSS Variables ─────────────────────────────────── */
+    :root {
+      --black: #030303;
+      --deep: #0a0a0a;
+      --surface: #121212;
+      --card: rgba(20, 20, 20, 0.65);
+      --border: rgba(220, 180, 57, 0.25);
+      --gold: #dcb439;
+      --gold-lt: #f8e599;
+      --gold-dim: rgba(220, 180, 57, 0.35);
+      --green: #0a170f;
+      --green-lt: #16301f;
+      --cream: #ffffff;
+      --text: #f4f4f4;
+      --muted: #b0b0b0;
+      --white: #ffffff;
+      --ff-display: 'Cormorant Garamond', Georgia, serif;
+      --ff-cap: 'Cinzel', serif;
+      --ff-body: 'Jost', sans-serif;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --dur: 0.7s;
+    }
+
+    /* ─── Reset & Base ──────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: var(--ff-body);
+      font-weight: 400;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ─── Ornament ──────────────────────────────────────── */
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .ornament span {
+      display: block;
+      height: 1px;
+      width: 60px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    .ornament span:last-child {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    .ornament i {
+      width: 6px;
+      height: 6px;
+      border: 1px solid var(--gold);
+      transform: rotate(45deg);
+      display: block;
+    }
+
+    .label {
+      font-family: var(--ff-cap);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      text-transform: uppercase;
+      display: block;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    /* ─── Fade-in animation ─────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .delay-2 {
+      transition-delay: 0.22s;
+    }
+
+    .delay-3 {
+      transition-delay: 0.34s;
+    }
+
+    .delay-4 {
+      transition-delay: 0.46s;
+    }
+
+    /* ─── Navbar ────────────────────────────────────────── */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1.6rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.5s, padding 0.4s, backdrop-filter 0.5s;
+    }
+
+    #navbar.scrolled {
+      background: rgba(5, 5, 5, 0.9);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 1rem 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--ff-cap);
+      font-size: 1.5rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+    }
+
+    .nav-logo span {
+      font-family: var(--ff-display);
+      font-size: 0.7rem;
+      display: block;
+      color: var(--muted);
+      letter-spacing: 0.3em;
+      font-style: italic;
+      margin-top: -4px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.4rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--ff-cap);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: var(--text);
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.3s var(--ease);
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-reserve {
+      font-family: var(--ff-cap);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 0.8rem 1.8rem;
+      transition: all 0.4s var(--ease);
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .nav-reserve:hover {
+      background: var(--gold);
+      color: #000;
+      box-shadow: 0 5px 20px rgba(220, 180, 57, 0.3);
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+      transition: 0.3s;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu a {
+      font-family: var(--ff-display);
+      font-size: 2rem;
+      font-style: italic;
+      color: var(--text);
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+    }
+
+    .mobile-menu a:hover {
+      color: var(--gold);
+    }
+
+    .mobile-close {
+      position: absolute;
+      top: 1.8rem;
+      right: 2rem;
+      font-size: 1.6rem;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--gold);
+      font-family: var(--ff-display);
+    }
+
+    /* ─── Hero ──────────────────────────────────────────── */
+    #hero {
+      height: 100vh;
+      min-height: 680px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(8, 8, 8, 0.55) 0%, rgba(8, 8, 8, 0.3) 50%, rgba(8, 8, 8, 0.82) 100%),
+        linear-gradient(135deg, #0f1a12 0%, #1a0f05 50%, #0a0a14 100%);
+    }
+
+    /* Decorative geometric shapes instead of img */
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 70% 40%, rgba(30, 58, 40, 0.7) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 20% 70%, rgba(201, 168, 76, 0.08) 0%, transparent 60%);
+    }
+
+    .hero-visual {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 55%;
+      overflow: hidden;
+    }
+
+    .hero-visual-inner {
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(to right, #080808 0%, transparent 40%),
+        linear-gradient(135deg, #162614 0%, #0e1a10 40%, #1a1206 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14rem;
+      opacity: 0.07;
+      font-family: var(--ff-cap);
+      color: var(--gold);
+      user-select: none;
+    }
+
+    /* Floating plates visual */
+    .hero-plates {
+      position: absolute;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      width: 380px;
+    }
+
+    .plate-card {
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .plate-card::before {
+      content: '';
+      display: block;
+      padding-bottom: 100%;
+    }
+
+    .plate-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      background: var(--card);
+    }
+
+    .plate-card:nth-child(1) .plate-inner {
+      background: linear-gradient(135deg, #1a180d, #2a2015);
+    }
+
+    .plate-card:nth-child(2) .plate-inner {
+      background: linear-gradient(135deg, #0d1a12, #152216);
+      margin-top: 28px;
+    }
+
+    .plate-card:nth-child(3) .plate-inner {
+      background: linear-gradient(135deg, #1a0e0e, #261515);
+      margin-top: -28px;
+    }
+
+    .plate-card:nth-child(4) .plate-inner {
+      background: linear-gradient(135deg, #141420, #1a1a2a);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 680px;
+      padding: 0 2rem;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--ff-cap);
+      font-size: 0.6rem;
+      letter-spacing: 0.42em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: fadeDown 1s var(--ease) 0.2s both;
+    }
+
+    .hero-title {
+      font-family: var(--ff-display);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.12;
+      color: var(--white);
+      margin-bottom: 1.4rem;
+      animation: fadeDown 1s var(--ease) 0.4s both;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: var(--cream);
+      margin-bottom: 3rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+      animation: fadeDown 1s var(--ease) 0.6s both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeDown 1s var(--ease) 0.8s both;
+    }
+
+    .btn-gold {
+      font-family: var(--ff-cap);
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      padding: 1.2rem 2.8rem;
+      background: linear-gradient(135deg, var(--gold), #b8912d);
+      color: #000;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.4s var(--ease);
+      display: inline-block;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(220, 180, 57, 0.2);
+      border-radius: 4px;
+    }
+
+    .btn-gold:hover {
+      background: linear-gradient(135deg, var(--gold-lt), var(--gold));
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(220, 180, 57, 0.5);
+    }
+
+    .btn-outline {
+      font-family: var(--ff-cap);
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      padding: 1.2rem 2.8rem;
+      background: rgba(220, 180, 57, 0.05);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.4s var(--ease);
+      display: inline-block;
+      text-transform: uppercase;
+      border-radius: 4px;
+    }
+
+    .btn-outline:hover {
+      background: var(--gold);
+      color: #000;
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(220, 180, 57, 0.3);
+    }
+
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 0 0 rgba(220, 180, 57, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(220, 180, 57, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 180, 57, 0); }
+    }
+
+    .btn-glow {
+      animation: pulse-glow 2s infinite;
+    }
+
+    .sticky-cta {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 1rem 1.8rem;
+      background: linear-gradient(135deg, var(--gold), #b8912d);
+      color: #000;
+      border-radius: 50px;
+      font-family: var(--ff-cap);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: pulse-glow 2s infinite;
+    }
+
+    .sticky-cta:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(220, 180, 57, 0.6);
+      animation: none;
+    }
+
+    @media (max-width: 768px) {
+      .sticky-cta {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        padding: 0.8rem 1.5rem;
+        font-size: 0.65rem;
+        gap: 6px;
+      }
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: fadeDown 1s var(--ease) 1.2s both;
+    }
+
+    .hero-scroll span {
+      font-family: var(--ff-cap);
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+      animation: scrollPulse 2s infinite;
+    }
+
+    @keyframes scrollPulse {
+
+      0%,
+      100% {
+        transform: scaleY(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scaleY(0.5);
+        opacity: 0.4;
+      }
+    }
+
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ─── Section Common ────────────────────────────────── */
+    section {
+      padding: 7rem 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2.8rem, 4vw, 4.2rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--cream);
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      line-height: 1.8;
+    }
+
+    /* ─── About ─────────────────────────────────────────── */
+    #about {
+      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #about::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(30, 58, 40, 0.4) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .about-visual {
+      position: relative;
+    }
+
+    .about-img-main {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg, #1a2e1a, #0e1a10, #2a1a0a);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6rem;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .about-img-main::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(8, 8, 8, 0.5), transparent 60%);
+    }
+
+    .about-badge {
+      position: absolute;
+      bottom: -1.5rem;
+      right: -1.5rem;
+      width: 120px;
+      height: 120px;
+      border: 1px solid var(--gold-dim);
+      background: var(--black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      z-index: 2;
+    }
+
+    .about-badge .num {
+      font-family: var(--ff-display);
+      font-size: 2.4rem;
+      font-weight: 600;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .about-badge .txt {
+      font-family: var(--ff-cap);
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .about-tag {
+      position: absolute;
+      top: 1.5rem;
+      left: -1.5rem;
+      background: var(--green);
+      border: 1px solid rgba(42, 82, 57, 0.5);
+      padding: 0.8rem 1.2rem;
+      font-family: var(--ff-cap);
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+    }
+
+    .about-text .label {
+      text-align: left;
+    }
+
+    .about-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2rem, 3vw, 3rem);
+      font-weight: 300;
+      line-height: 1.2;
+      color: var(--cream);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-title em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+
+    .about-desc {
+      font-size: 1rem;
+      color: var(--text);
+      font-weight: 400;
+      margin-bottom: 2rem;
+      line-height: 1.9;
+    }
+
+    .about-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-item .num {
+      font-family: var(--ff-display);
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-item .lbl {
+      font-family: var(--ff-cap);
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ─── Menu ──────────────────────────────────────────── */
+    #menu {
+      background: var(--black);
+      position: relative;
+    }
+
+    .menu-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 3.5rem;
+      border: 1px solid var(--border);
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      overflow: hidden;
+    }
+
+    .menu-tab {
+      font-family: var(--ff-cap);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      padding: 1.2rem 2.8rem;
+      cursor: pointer;
+      color: var(--text);
+      transition: all 0.4s var(--ease);
+      border: none;
+      background: rgba(20, 20, 20, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .menu-tab:last-child {
+      border-right: none;
+    }
+
+    .menu-tab.active,
+    .menu-tab:hover {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5px;
+    }
+
+    @keyframes panelFade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .menu-panel {
+      display: none;
+    }
+
+    .menu-panel.active {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1px;
+      animation: panelFade 0.6s var(--ease) forwards;
+    }
+
+    .menu-card {
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      padding: 2.2rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s var(--ease);
+      cursor: default;
+      border-radius: 8px;
+    }
+
+    .menu-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(220, 180, 57, 0.08), transparent);
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .menu-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-6px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(220, 180, 57, 0.15);
+    }
+
+    .menu-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+
+    .card-name {
+      font-family: var(--ff-display);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 1.4rem;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    .card-price {
+      font-family: var(--ff-display);
+      font-size: 1.3rem;
+      color: var(--gold);
+    }
+
+    .card-tag {
+      font-family: var(--ff-cap);
+      font-size: 0.5rem;
+      letter-spacing: 0.18em;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .card-tag.veg {
+      border-color: rgba(74, 160, 90, 0.4);
+      color: #4aa05a;
+    }
+
+    /* ─── Gallery ───────────────────────────────────────── */
+    #gallery {
+      background: var(--surface);
+      padding-bottom: 0;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 200px;
+      gap: 6px;
+      margin-top: 3rem;
+    }
+
+    .g-item {
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .g-item:nth-child(1) {
+      grid-column: span 5;
+      grid-row: span 2;
+    }
+
+    .g-item:nth-child(2) {
+      grid-column: span 4;
+      grid-row: span 1;
+    }
+
+    .g-item:nth-child(3) {
+      grid-column: span 3;
+      grid-row: span 1;
+    }
+
+    .g-item:nth-child(4) {
+      grid-column: span 4;
+      grid-row: span 1;
+    }
+
+    .g-item:nth-child(5) {
+      grid-column: span 3;
+      grid-row: span 1;
+    }
+
+    .g-item:nth-child(6) {
+      grid-column: span 4;
+      grid-row: span 2;
+    }
+
+    .g-item:nth-child(7) {
+      grid-column: span 4;
+      grid-row: span 2;
+    }
+
+    .g-item:nth-child(8) {
+      grid-column: span 4;
+      grid-row: span 2;
+    }
+
+    .g-inner {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      transition: transform 0.6s var(--ease);
+    }
+
+    .g-item:nth-child(1) .g-inner {
+      background: linear-gradient(135deg, #1a1206, #2a2015);
+      font-size: 5rem;
+    }
+
+    .g-item:nth-child(2) .g-inner {
+      background: linear-gradient(135deg, #0d1a12, #152216);
+    }
+
+    .g-item:nth-child(3) .g-inner {
+      background: linear-gradient(135deg, #1a0e0e, #261515);
+    }
+
+    .g-item:nth-child(4) .g-inner {
+      background: linear-gradient(135deg, #141420, #1a1a2a);
+    }
+
+    .g-item:nth-child(5) .g-inner {
+      background: linear-gradient(135deg, #1a1a0d, #26260f);
+    }
+
+    .g-item:nth-child(6) .g-inner {
+      background: linear-gradient(135deg, #0a1a0a, #152215);
+      font-size: 6rem;
+    }
+
+    .g-item:nth-child(7) .g-inner {
+      background: linear-gradient(135deg, #1a0a0a, #221515);
+      font-size: 5rem;
+    }
+
+    .g-item:nth-child(8) .g-inner {
+      background: linear-gradient(135deg, #0a0a1a, #101026);
+    }
+
+    .g-item:hover .g-inner {
+      transform: scale(1.06);
+    }
+
+    .g-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(8, 8, 8, 0.7), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.2rem;
+    }
+
+    .g-item:hover .g-overlay {
+      opacity: 1;
+    }
+
+    .g-label {
+      font-family: var(--ff-display);
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--cream);
+    }
+
+    /* ─── Why Us ─────────────────────────────────────────── */
+    #why {
+      background: var(--green);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #why::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 80% 50%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+        linear-gradient(to bottom, rgba(8, 8, 8, 0.3), rgba(8, 8, 8, 0.1));
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      position: relative;
+    }
+
+    .why-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 3.5rem 2.5rem;
+      text-align: center;
+      transition: all 0.5s var(--ease);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 8px;
+    }
+
+    .why-card:hover {
+      background: rgba(20, 20, 20, 0.85);
+      border-color: var(--gold);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(220, 180, 57, 0.15);
+    }
+
+    .why-icon {
+      font-size: 2.6rem;
+      display: block;
+      margin-bottom: 1.4rem;
+    }
+
+    .why-title {
+      font-family: var(--ff-display);
+      font-size: 1.3rem;
+      color: var(--cream);
+      margin-bottom: 0.8rem;
+    }
+
+    .why-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.8;
+      font-weight: 400;
+    }
+
+    /* ─── Reviews ───────────────────────────────────────── */
+    #reviews {
+      background: var(--deep);
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+    }
+
+    .review-card {
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      padding: 3rem 2.5rem;
+      position: relative;
+      transition: all 0.5s var(--ease);
+      border-radius: 8px;
+    }
+
+    .review-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(220, 180, 57, 0.1);
+    }
+
+    .review-card::before {
+      content: '"';
+      font-family: var(--ff-display);
+      font-size: 6rem;
+      color: var(--gold-dim);
+      position: absolute;
+      top: 0.5rem;
+      right: 1.5rem;
+      line-height: 1;
+    }
+
+    .stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 1.4rem;
+    }
+
+    .stars span {
+      color: var(--gold);
+      font-size: 0.8rem;
+    }
+
+    .review-text {
+      font-family: var(--ff-display);
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--cream);
+      line-height: 1.7;
+      margin-bottom: 1.8rem;
+    }
+
+    .reviewer {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .reviewer-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--green);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .reviewer-name {
+      font-family: var(--ff-cap);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+    }
+
+    .reviewer-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ─── Contact ───────────────────────────────────────── */
+    #contact {
+      background: var(--black);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-info .label {
+      text-align: left;
+    }
+
+    .contact-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2rem, 3vw, 3rem);
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 2.5rem;
+      line-height: 1.2;
+    }
+
+    .contact-title em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+
+    .info-row {
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+      margin-bottom: 1.8rem;
+      padding-bottom: 1.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .info-icon {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      color: var(--gold);
+    }
+
+    .info-label {
+      font-family: var(--ff-cap);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .info-val {
+      font-size: 1rem;
+      color: var(--text);
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .map-box {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--card);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .map-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      filter: grayscale(1) invert(0.9) contrast(0.8);
+      opacity: 0.7;
+    }
+
+    .map-label {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      background: rgba(8, 8, 8, 0.85);
+      border: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      font-family: var(--ff-cap);
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+    }
+
+    .reserve-block {
+      margin-top: 0;
+      padding: 3rem;
+      background: rgba(26, 26, 26, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 30px rgba(220, 180, 57, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .reserve-block::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(220, 180, 57, 0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .reserve-block h3 {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      color: var(--cream);
+      margin-bottom: 0.5rem;
+    }
+
+    .reserve-block p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .reserve-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .reserve-form input,
+    .reserve-form select {
+      background: rgba(20, 20, 20, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 1rem 1.2rem;
+      font-family: var(--ff-body);
+      font-size: 1rem;
+      font-weight: 400;
+      outline: none;
+      transition: all 0.4s var(--ease);
+      width: 100%;
+      border-radius: 4px;
+    }
+
+    .reserve-form input::placeholder {
+      color: var(--muted);
+    }
+
+    .reserve-form input:focus,
+    .reserve-form select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 15px rgba(220, 180, 57, 0.15);
+      background: rgba(30, 30, 30, 0.8);
+    }
+
+    .reserve-form select option {
+      background: var(--surface);
+    }
+
+    .reserve-form .full {
+      grid-column: span 2;
+    }
+
+    /* ─── Footer ─────────────────────────────────────────── */
+    footer {
+      background: var(--deep);
+      border-top: 1px solid var(--border);
+      padding: 4rem 0 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand .logo {
+      font-family: var(--ff-cap);
+      font-size: 1.4rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+
+    .footer-brand .tagline {
+      font-family: var(--ff-display);
+      font-style: italic;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.8;
+      max-width: 260px;
+      font-weight: 400;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .social-link {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: border-color 0.3s, background 0.3s;
+      cursor: pointer;
+    }
+
+    .social-link:hover {
+      border-color: var(--gold);
+      background: rgba(201, 168, 76, 0.1);
+    }
+
+    .footer-col h4 {
+      font-family: var(--ff-cap);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      color: var(--gold);
+      margin-bottom: 1.4rem;
+      text-transform: uppercase;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 0.8rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+      transition: color 0.3s;
+      cursor: pointer;
+      font-weight: 400;
+    }
+
+    .footer-col ul li:hover {
+      color: var(--text);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 1.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: var(--ff-cap);
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── Responsive ────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .about-visual {
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .reviews-grid {
+        grid-template-columns: 1fr;
+        gap: 1px;
+      }
+
+      .hero-plates {
+        display: none;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #navbar {
+        padding: 1.2rem 1.5rem;
+      }
+
+      #navbar.scrolled {
+        padding: 0.9rem 1.5rem;
+      }
+
+      .nav-links,
+      .nav-reserve {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      section {
+        padding: 5rem 0;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .reserve-form {
+        grid-template-columns: 1fr;
+      }
+
+      .reserve-form .full {
+        grid-column: span 1;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 150px;
+      }
+
+      .g-item {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+      }
+
+      .menu-tabs {
+        flex-wrap: wrap;
+      }
+
+      .menu-tab {
+        flex: 1;
+        text-align: center;
+        min-width: 100px;
+      }
+
+      .why-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 0.8rem;
+        text-align: center;
+      }
+
+      .about-tag {
+        left: 0;
+        top: -2rem;
+      }
+
+      .about-badge {
+        right: 0;
+      }
+    }
+
+    /* ─── Instagram Widget ──────────────────────────────── */
+    .insta-widget {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      max-width: 1000px;
+      margin: 0 auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .insta-header {
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .insta-profile {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .insta-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      padding: 2px;
+      object-fit: contain;
+      background: var(--black);
+    }
+
+    .insta-name {
+      font-family: var(--ff-display);
+      font-size: 1.1rem;
+      color: var(--cream);
+      font-weight: 600;
+    }
+
+    .insta-handle {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .insta-stats {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .insta-stats .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .insta-stats .val {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .insta-stats .lbl {
+      font-size: 0.65rem;
+      color: var(--muted);
+      font-family: var(--ff-cap);
+      letter-spacing: 0.05em;
+    }
+
+    .insta-btn-follow {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #0095f6;
+      color: #fff;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    .insta-btn-follow:hover {
+      background: #1877f2;
+    }
+
+    .insta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .insta-item {
+      aspect-ratio: 1;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      transition: opacity 0.3s;
+    }
+
+    .insta-item:hover {
+      opacity: 0.85;
+    }
+
+    @media (max-width: 768px) {
+      .insta-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .insta-stats {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .insta-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══ Navbar ═══════════════════════════════════════ -->
+  <nav id="navbar">
+    <div class="nav-logo" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
+      <img src="assets/img/ziva%20logo.png" alt="Ziva Logo" style="height: 32px; width: auto; display: block;">
+      <span style="margin-top: 0;">all day dining</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-reserve">Reserve a Table</a>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <ul class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose">✕</button>
+    <li><a href="#about" class="mobile-link">About</a></li>
+    <li><a href="#menu" class="mobile-link">Menu</a></li>
+    <li><a href="#gallery" class="mobile-link">Gallery</a></li>
+    <li><a href="#reviews" class="mobile-link">Reviews</a></li>
+    <li><a href="#contact" class="mobile-link">Contact</a></li>
+  </ul>
+
+  <!-- ═══ Hero ══════════════════════════════════════════ -->
+  <section id="hero">
+    <video autoplay loop muted playsinline
+      style="position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: 0; filter: brightness(0.7);">
+      <source src="assets/ziva%20picvideo/ziva%208.mp4" type="video/mp4">
+    </video>
+    <div class="hero-bg"
+      style="background: linear-gradient(to bottom, rgba(8,8,8,0.55) 0%, rgba(8,8,8,0.2) 50%, rgba(8,8,8,0.85) 100%); z-index: 1;">
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Holiday Inn Amritsar · Est. Fine Dining</p>
+      <h1 class="hero-title">Experience <em>Fine Dining</em><br>at Ziva</h1>
+      <p class="hero-sub">A perfect blend of taste, ambiance and luxury</p>
+      <div class="hero-btns">
+        <a href="assets/menu/ziva%20menu.pdf" target="_blank" class="btn-gold">View Menu</a>
+        <a href="#contact" class="btn-outline">Reserve Table</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ═══ About ══════════════════════════════════════════ -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-visual fade-up">
+          <div class="about-tag">★ TripAdvisor Ranked #2</div>
+          <div class="about-img-main"
+            style="background-image: url('assets/ziva%20picvideo/ziva%201.jpeg'); background-size: cover; background-position: center; font-size: 0;">
+          </div>
+          <div class="about-badge">
+            <span class="num">4.8</span>
+            <span class="txt">Google Rating</span>
+          </div>
+        </div>
+        <div class="about-text">
+          <span class="label">Our Story</span>
+          <div class="ornament"><span></span><i></i><span></span></div>
+          <h2 class="about-title fade-up delay-1">Where <em>Brilliance</em><br>Meets the Plate</h2>
+          <p class="about-desc fade-up delay-2">
+            Ziva — meaning brilliance and brightness — is Amritsar's celebrated all-day dining destination, nestled
+            inside the Holiday Inn on Ranjit Avenue. We bring together the finest flavours of North India, global
+            cuisines, and artisanal desserts under one roof, crafted with a commitment to quality that has earned us
+            recognition across the city.
+          </p>
+          <p class="about-desc fade-up delay-2">
+            From sunrise breakfasts to candlelit dinners, every moment at Ziva is designed to be memorable. Our culinary
+            team sources the freshest ingredients, balanced with bold flavours and presented with the elegance you
+            deserve.
+          </p>
+          <div class="about-stats fade-up delay-3">
+            <div class="stat-item">
+              <div class="num">183+</div>
+              <div class="lbl">Reviews</div>
+            </div>
+            <div class="stat-item">
+              <div class="num">50+</div>
+              <div class="lbl">Menu Items</div>
+            </div>
+            <div class="stat-item">
+              <div class="num">#2</div>
+              <div class="lbl">TripAdvisor</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Signature Wow Section ════════════════════════════ -->
+  <section id="signature" style="position: relative; padding: 8rem 0; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 80vh;">
+    <!-- Parallax BG -->
+    <div style="position: absolute; inset: 0; background-image: url('assets/ziva%20picvideo/ziva%207.jpeg'); background-size: cover; background-position: center; filter: brightness(0.2) saturate(1.2);"></div>
+    <div style="position: absolute; inset: 0; background: linear-gradient(to top, var(--black), transparent 40%, var(--black));"></div>
+    
+    <div class="container" style="position: relative; z-index: 2; text-align: center; max-width: 900px;">
+      <span class="label fade-up" style="color: var(--gold-lt);">A Culinary Masterpiece</span>
+      <div class="ornament fade-up delay-1"><span></span><i></i><span></span></div>
+      <h2 class="section-title fade-up delay-2" style="font-size: clamp(3rem, 5vw, 5.5rem); margin-bottom: 2rem;">The Chef's <em>Canvas</em></h2>
+      <p class="fade-up delay-3" style="font-size: 1.15rem; color: var(--cream); font-weight: 300; line-height: 1.9; text-shadow: 0 2px 10px rgba(0,0,0,0.8); max-width: 700px; margin: 0 auto;">
+        Cooking is an art, and every plate we serve is a testament to our passion. We don't just prepare food; we curate memories. Discover our signature dishes, crafted with heirloom recipes and the finest seasonal ingredients to bring a symphony of flavors to your palate.
+      </p>
+      
+      <div class="fade-up delay-4" style="margin-top: 4rem; display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;">
+        <div style="text-align: center; transition: transform 0.4s var(--ease);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <img src="assets/ziva%20picvideo/ziva%202.jpeg" alt="Dish 1" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); padding: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <h4 style="font-family: var(--ff-cap); color: var(--gold); margin-top: 1.2rem; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">Slow Cooked<br>Butter Chicken</h4>
+        </div>
+        <div style="text-align: center; transform: translateY(-30px); transition: transform 0.4s var(--ease);" onmouseover="this.style.transform='translateY(-30px) scale(1.05)'" onmouseout="this.style.transform='translateY(-30px) scale(1)'">
+          <img src="assets/ziva%20picvideo/ziva%204.jpeg" alt="Dish 2" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); padding: 5px; box-shadow: 0 15px 50px rgba(220,180,57,0.25);">
+          <h4 style="font-family: var(--ff-cap); color: var(--gold); margin-top: 1.2rem; font-size: 0.95rem; letter-spacing: 0.1em; text-transform: uppercase;">Tandoori<br>Tiger Prawns</h4>
+        </div>
+        <div style="text-align: center; transition: transform 0.4s var(--ease);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <img src="assets/ziva%20picvideo/ziva%206.jpeg" alt="Dish 3" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); padding: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <h4 style="font-family: var(--ff-cap); color: var(--gold); margin-top: 1.2rem; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">Artisan<br>Desserts</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Menu ═══════════════════════════════════════════ -->
+  <section id="menu">
+    <div class="container">
+      <div class="section-header fade-up">
+        <span class="label">Culinary Excellence</span>
+        <div class="ornament"><span></span><i></i><span></span></div>
+        <h2 class="section-title">Our <em>Menu</em></h2>
+        <p class="section-sub">A curated selection of global and Indian flavours, crafted for the discerning palate</p>
+      </div>
+
+      <div class="menu-tabs fade-up delay-1">
+        <button class="menu-tab active" data-tab="breakfast">Breakfast</button>
+        <button class="menu-tab" data-tab="appetizers">Appetizers</button>
+        <button class="menu-tab" data-tab="mains">Main Course</button>
+        <button class="menu-tab" data-tab="desserts">Desserts</button>
+      </div>
+
+      <!-- Breakfast -->
+      <div class="menu-panel active" id="tab-breakfast">
+        <div class="menu-card fade-up"><span class="card-emoji">🥞</span>
+          <div class="card-name">Masala Omelette</div>
+          <div class="card-desc">Farm eggs with onion, tomato, green chilli and fresh herbs</div>
+          <div class="card-footer">
+            <span class="card-price">₹299</span>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <span class="card-tag" style="border-color:var(--gold); color:var(--gold);">Chef's Special 🔥</span>
+              <span class="card-tag veg">Veg</span>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card fade-up delay-1"><span class="card-emoji">🥣</span>
+          <div class="card-name">Hare Moong ki Chaat</div>
+          <div class="card-desc">In-house grown sprouts with onion, tomato and lemon</div>
+          <div class="card-footer"><span class="card-price">₹299</span><span class="card-tag veg">Veg</span></div>
+        </div>
+        <div class="menu-card fade-up delay-2"><span class="card-emoji">🍳</span>
+          <div class="card-name">Continental Platter</div>
+          <div class="card-desc">Eggs, toasted sourdough, grilled tomato and seasonal greens</div>
+          <div class="card-footer"><span class="card-price">₹499</span><span class="card-tag">Non-Veg</span></div>
+        </div>
+        <div class="menu-card fade-up delay-3"><span class="card-emoji">🍵</span>
+          <div class="card-name">Lemon Vegetable Soup</div>
+          <div class="card-desc">Clear soup with celery, root vegetables and a hint of lemon</div>
+          <div class="card-footer"><span class="card-price">₹299</span><span class="card-tag veg">Veg</span></div>
+        </div>
+      </div>
+
+      <!-- Appetizers -->
+      <div class="menu-panel" id="tab-appetizers">
+        <div class="menu-card fade-up"><span class="card-emoji">🍢</span>
+          <div class="card-name">Paneer Tikka</div>
+          <div class="card-desc">Marinated cottage cheese grilled in tandoor with mint chutney</div>
+          <div class="card-footer"><span class="card-price">₹449</span><span class="card-tag veg">Veg</span></div>
+        </div>
+        <div class="menu-card fade-up delay-1"><span class="card-emoji">🥩</span>
+          <div class="card-name">Seekh Kebab</div>
+          <div class="card-desc">Minced lamb with aromatic spices, char-grilled to perfection</div>
+          <div class="card-footer"><span class="card-price">₹599</span><span class="card-tag">Non-Veg</span></div>
+        </div>
+        <div class="menu-card fade-up delay-2"><span class="card-emoji">🦐</span>
+          <div class="card-name">Tandoori Prawns</div>
+          <div class="card-desc">Tiger prawns marinated in saffron and yoghurt marinade</div>
+          <div class="card-footer"><span class="card-price">₹699</span><span class="card-tag">Non-Veg</span></div>
+        </div>
+        <div class="menu-card fade-up delay-3"><span class="card-emoji">🥗</span>
+          <div class="card-name">Stir Fry Pokchoy with Tofu</div>
+          <div class="card-desc">Garlic flavored bok choy with silken tofu, sesame oil</div>
+          <div class="card-footer"><span class="card-price">₹499</span><span class="card-tag veg">Veg</span></div>
+        </div>
+      </div>
+
+      <!-- Main Course -->
+      <div class="menu-panel" id="tab-mains">
+        <div class="menu-card fade-up"><span class="card-emoji">🍛</span>
+          <div class="card-name">Butter Chicken</div>
+          <div class="card-desc">Slow-cooked chicken in rich tomato butter gravy with fenugreek</div>
+          <div class="card-footer">
+            <span class="card-price">₹649</span>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <span class="card-tag" style="border-color:var(--gold); color:var(--gold);">Chef's Special 🔥</span>
+              <span class="card-tag">Non-Veg</span>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card fade-up delay-1"><span class="card-emoji">🍚</span>
+          <div class="card-name">Dum Biryani</div>
+          <div class="card-desc">Fragrant basmati rice slow-cooked with spiced meat and saffron</div>
+          <div class="card-footer"><span class="card-price">₹699</span><span class="card-tag">Non-Veg</span></div>
+        </div>
+        <div class="menu-card fade-up delay-2"><span class="card-emoji">🌿</span>
+          <div class="card-name">Palak Papad ki Subzi</div>
+          <div class="card-desc">Fresh spinach sautéed with garlic and crushed roasted papad</div>
+          <div class="card-footer"><span class="card-price">₹499</span><span class="card-tag veg">Veg</span></div>
+        </div>
+        <div class="menu-card fade-up delay-3"><span class="card-emoji">🐟</span>
+          <div class="card-name">Poached Fish, White Wine</div>
+          <div class="card-desc">Fresh water fish fillets poached in aromatic white wine sauce</div>
+          <div class="card-footer"><span class="card-price">₹699</span><span class="card-tag">Non-Veg</span></div>
+        </div>
+      </div>
+
+      <!-- Desserts -->
+      <div class="menu-panel" id="tab-desserts">
+        <div class="menu-card fade-up"><span class="card-emoji">🍰</span>
+          <div class="card-name">Blueberry Cheesecake</div>
+          <div class="card-desc">Baked cheesecake served with fresh blueberry compote</div>
+          <div class="card-footer"><span class="card-price">₹349</span><span class="card-tag veg">Veg</span></div>
+        </div>
+        <div class="menu-card fade-up delay-1"><span class="card-emoji">🍮</span>
+          <div class="card-name">Moong Dal Badam Halwa</div>
+          <div class="card-desc">Rich split green gram sweet with almonds and clarified butter</div>
+          <div class="card-footer"><span class="card-price">₹349</span><span class="card-tag veg">Veg</span></div>
+        </div>
+        <div class="menu-card fade-up delay-2"><span class="card-emoji">🍫</span>
+          <div class="card-name">Chocolate Walnut Brownie</div>
+          <div class="card-desc">Warm brownie with chocolate sauce, butter, egg and walnut</div>
+          <div class="card-footer"><span class="card-price">₹349</span><span class="card-tag veg">Veg</span></div>
+        </div>
+        <div class="menu-card fade-up delay-3"><span class="card-emoji">🍩</span>
+          <div class="card-name">Hot Gulab Jamun</div>
+          <div class="card-desc">Deep fried spongy milk balls in rose-cardamom syrup</div>
+          <div class="card-footer"><span class="card-price">₹349</span><span class="card-tag veg">Veg</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Gallery ══════════════════════════════════════ -->
+  <section id="gallery">
+    <div class="container">
+      <div class="section-header fade-up">
+        <span class="label">Ambiance & Cuisine</span>
+        <div class="ornament"><span></span><i></i><span></span></div>
+        <h2 class="section-title">The Ziva <em>Experience</em></h2>
+      </div>
+    </div>
+    <div class="gallery-grid fade-up">
+      <div class="g-item">
+        <div class="g-inner"
+          style="background-image: url('assets/ziva%20picvideo/ziva%201.jpeg'); background-size: cover; background-position: center; font-size: 0;">
+        </div>
+        <div class="g-overlay"><span class="g-label">Signature Plating</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner"
+          style="background-image: url('assets/ziva%20picvideo/ziva%202.jpeg'); background-size: cover; background-position: center; font-size: 0;">
+        </div>
+        <div class="g-overlay"><span class="g-label">Butter Chicken</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner"
+          style="background-image: url('assets/ziva%20picvideo/ziva%203.jpeg'); background-size: cover; background-position: center; font-size: 0;">
+        </div>
+        <div class="g-overlay"><span class="g-label">Dining Hall</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner"
+          style="background-image: url('assets/ziva%20picvideo/ziva%204.jpeg'); background-size: cover; background-position: center; font-size: 0;">
+        </div>
+        <div class="g-overlay"><span class="g-label">Tandoor Kebabs</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner"
+          style="background-image: url('assets/ziva%20picvideo/ziva%205.jpeg'); background-size: cover; background-position: center; font-size: 0;">
+        </div>
+        <div class="g-overlay"><span class="g-label">Evening Dining</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner"
+          style="background-image: url('assets/ziva%20picvideo/ziva%206.jpeg'); background-size: cover; background-position: center; font-size: 0;">
+        </div>
+        <div class="g-overlay"><span class="g-label">Artisan Desserts</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner" style="background: #000; padding: 0;">
+          <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            <source src="assets/ziva%20picvideo/ziva%208.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="g-overlay" style="z-index: 2;"><span class="g-label">The Ziva Experience</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner"
+          style="background-image: url('assets/ziva%20picvideo/ziva%207.jpeg'); background-size: cover; background-position: center; font-size: 0;">
+        </div>
+        <div class="g-overlay"><span class="g-label">Private Dining</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Why Us ════════════════════════════════════════ -->
+  <section id="why">
+    <div class="container">
+      <div class="section-header fade-up" style="position:relative;z-index:1;">
+        <span class="label">Why Ziva</span>
+        <div class="ornament"><span></span><i></i><span></span></div>
+        <h2 class="section-title">A Cut <em>Above</em> the Rest</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card fade-up">
+          <span class="why-icon">👑</span>
+          <h3 class="why-title">Premium Dining</h3>
+          <p class="why-desc">Every detail — from table linen to plating — is curated for an elevated experience worthy
+            of every occasion.</p>
+        </div>
+        <div class="why-card fade-up delay-1">
+          <span class="why-icon">🌍</span>
+          <h3 class="why-title">Multi-Cuisine</h3>
+          <p class="why-desc">From North Indian classics to continental favourites and health-conscious options — one
+            menu, a world of flavours.</p>
+        </div>
+        <div class="why-card fade-up delay-2">
+          <span class="why-icon">✨</span>
+          <h3 class="why-title">Elegant Ambiance</h3>
+          <p class="why-desc">A warm, sophisticated space with soft lighting and refined interiors that set the perfect
+            mood for any gathering.</p>
+        </div>
+        <div class="why-card fade-up delay-3">
+          <span class="why-icon">⭐</span>
+          <h3 class="why-title">Top Rated</h3>
+          <p class="why-desc">4.8 on Google, TripAdvisor #2 in Amritsar — a testament to consistent excellence cherished
+            by every guest.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Reviews ══════════════════════════════════════ -->
+  <section id="reviews">
+    <div class="container">
+      <div class="section-header fade-up">
+        <span class="label">Guest Voices</span>
+        <div class="ornament"><span></span><i></i><span></span></div>
+        <h2 class="section-title">What Our Guests <em>Say</em></h2>
+      </div>
+      <div class="reviews-grid">
+        <div class="review-card fade-up">
+          <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="review-text">An evening at Ziva is unlike anything else in Amritsar. The butter chicken was sublime,
+            the ambiance was breathtaking, and the service impeccable. Truly five-star.</p>
+          <div class="reviewer">
+            <div class="reviewer-avatar">👤</div>
+            <div>
+              <div class="reviewer-name">Arjun Mehta</div>
+              <div class="reviewer-sub">Google Review · Verified Diner</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card fade-up delay-1">
+          <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="review-text">We celebrated our anniversary here and it was magical. From the Paneer Tikka to the
+            Blueberry Cheesecake — every dish was a masterpiece. We will be back.</p>
+          <div class="reviewer">
+            <div class="reviewer-avatar">👤</div>
+            <div>
+              <div class="reviewer-name">Priya & Rahul Sharma</div>
+              <div class="reviewer-sub">TripAdvisor · Anniversary Dinner</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card fade-up delay-2">
+          <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <p class="review-text">The health selection surprised us — light, flavourful, and beautifully presented. For a
+            hotel restaurant, Ziva genuinely punches above its weight. Highly recommended.</p>
+          <div class="reviewer">
+            <div class="reviewer-avatar">👤</div>
+            <div>
+              <div class="reviewer-name">Simran Kaur</div>
+              <div class="reviewer-sub">Google Review · Regular Guest</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Instagram Feed ═════════════════════════════════ -->
+  <section id="instagram" style="background: var(--surface);">
+    <div class="container">
+      <div class="section-header fade-up">
+        <span class="label">Social</span>
+        <div class="ornament"><span></span><i></i><span></span></div>
+        <h2 class="section-title">Follow Us on <em>Instagram</em></h2>
+      </div>
+
+      <div class="insta-widget fade-up delay-1">
+        <div class="insta-header">
+          <a href="https://www.instagram.com/zivaholidayinnamritsar?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" class="insta-profile">
+            <img src="assets/img/ziva%20logo.png" alt="Ziva" class="insta-avatar">
+            <div class="insta-info">
+              <div class="insta-name">Ziva, All day dinning</div>
+              <div class="insta-handle">@zivaholidayinnamritsar</div>
+            </div>
+          </a>
+          <div class="insta-stats">
+            <div class="stat"><span class="val">445</span><span class="lbl">Posts</span></div>
+            <div class="stat"><span class="val">1,047</span><span class="lbl">Followers</span></div>
+            <div class="stat"><span class="val">2</span><span class="lbl">Following</span></div>
+          </div>
+          <a href="https://www.instagram.com/zivaholidayinnamritsar?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" class="insta-btn-follow">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+            </svg>
+            Follow
+          </a>
+        </div>
+        <div class="insta-grid">
+          <a href="https://www.instagram.com/zivaholidayinnamritsar?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" class="insta-item"
+            style="background-image: url('assets/ziva%20picvideo/ziva%202.jpeg');"></a>
+          <a href="https://www.instagram.com/zivaholidayinnamritsar?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" class="insta-item"
+            style="background-image: url('assets/ziva%20picvideo/ziva%203.jpeg');"></a>
+          <a href="https://www.instagram.com/zivaholidayinnamritsar?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" class="insta-item"
+            style="background-image: url('assets/ziva%20picvideo/ziva%204.jpeg');"></a>
+          <a href="https://www.instagram.com/zivaholidayinnamritsar?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" class="insta-item"
+            style="background-image: url('assets/ziva%20picvideo/ziva%205.jpeg');"></a>
+          <a href="https://www.instagram.com/zivaholidayinnamritsar?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" class="insta-item"
+            style="background-image: url('assets/ziva%20picvideo/ziva%206.jpeg');"></a>
+          <a href="https://www.instagram.com/zivaholidayinnamritsar?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" class="insta-item"
+            style="background-image: url('assets/ziva%20picvideo/ziva%207.jpeg');"></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Location ═════════════════════════════════════ -->
+  <section id="location" style="background: var(--black); padding-bottom: 2rem;">
+    <div class="container" style="max-width: 1400px;">
+      <h2
+        style="text-align: center; font-family: var(--ff-display); font-size: 3.5rem; color: var(--gold); margin-bottom: 3rem; font-weight: 300;">
+        Location</h2>
+      <div class="fade-up"
+        style="width: 100%; height: 500px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3397!2d74.863102!3d31.6536251!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39196596a1dddb05%3A0xe703f6d207b21229!2sZIVA!5e0!3m2!1sen!2sin!4v1"
+          width="100%" height="100%"
+          style="border:0; filter: invert(90%) hue-rotate(180deg) brightness(85%) contrast(85%);" allowfullscreen=""
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Contact ══════════════════════════════════════ -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-header fade-up">
+        <span class="label">Find Us</span>
+        <div class="ornament"><span></span><i></i><span></span></div>
+        <h2 class="section-title">Visit <em>Ziva</em></h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info fade-up">
+          <span class="label" style="text-align:left">Get in Touch</span>
+          <h3 class="contact-title">We'd Love to<br><em>Welcome You</em></h3>
+          <div class="info-row">
+            <div class="info-icon">📍</div>
+            <div>
+              <div class="info-label">Address</div>
+              <div class="info-val">Holiday Inn Amritsar Ranjit Avenue,<br>District Shopping Complex,<br>Ranjit Avenue,
+                Amritsar, Punjab 143001</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon">📞</div>
+            <div>
+              <div class="info-label">Phone</div>
+              <div class="info-val">+91 85588 09115</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon">🕐</div>
+            <div>
+              <div class="info-label">Opening Hours</div>
+              <div class="info-val">Open Daily · 7:00 AM – 11:00 PM<br>All day dining · Breakfast, Lunch & Dinner</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon">✉️</div>
+            <div>
+              <div class="info-label">Options</div>
+              <div class="info-val">Dine-in · Takeaway · Delivery · Catering</div>
+            </div>
+          </div>
+        </div>
+        <div class="fade-up delay-2">
+          <div class="reserve-block">
+            <h3>Reserve Your Table</h3>
+            <p>Book ahead for a seamless dining experience</p>
+            <div class="reserve-form">
+              <input type="text" id="resName" placeholder="Your Name">
+              <input type="tel" id="resPhone" placeholder="Phone Number">
+              <input type="date" id="resDate">
+              <select id="resGuests">
+                <option value="" disabled selected>Guests</option>
+                <option>1 Guest</option>
+                <option>2 Guests</option>
+                <option>3–4 Guests</option>
+                <option>5+ Guests</option>
+              </select>
+              <button class="btn-gold full" style="border:none;cursor:pointer;width:100%;text-align:center;"
+                onclick="sendWhatsApp()">Reserve a Table</button>
+            </div>
+            <script>
+              function sendWhatsApp() {
+                const name = document.getElementById('resName').value.trim();
+                const phone = document.getElementById('resPhone').value.trim();
+                const dateStr = document.getElementById('resDate').value;
+                const guests = document.getElementById('resGuests').value;
+
+                if (!name) { alert('Please enter your name.'); return; }
+                if (!dateStr) { alert('Please select a date.'); return; }
+                if (!guests) { alert('Please select number of guests.'); return; }
+
+                const dateObj = new Date(dateStr);
+                const formattedDate = !isNaN(dateObj) ? dateObj.toLocaleDateString('en-GB') : dateStr;
+
+                const msg = `Hi, I want to reserve a table at Ziva.\n\n*Name:* ${name}\n*Phone:* ${phone || 'Not provided'}\n*Date:* ${formattedDate}\n*Guests:* ${guests}`;
+                const whatsappUrl = `https://wa.me/918558809115?text=${encodeURIComponent(msg)}`;
+                window.open(whatsappUrl, '_blank');
+              }
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Footer ═══════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="display: flex; flex-direction: column; align-items: flex-start;">
+            <img src="assets/img/ziva%20logo.png" alt="Ziva Logo" style="height: 48px; width: auto; display: block;">
+          </div>
+          <div class="tagline" style="margin-top: 4px;">all day dining</div>
+          <p>Brilliance on a plate. Amritsar's most celebrated dining destination, inside Holiday Inn Ranjit Avenue.</p>
+          <div class="social-links">
+            <a href="https://www.instagram.com/zivaholidayinnamritsar?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+              target="_blank" class="social-link" title="Instagram">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://www.facebook.com/ZivaHolidayInnAmritsar/" target="_blank" class="social-link"
+              title="Facebook">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#about">About Ziva</a></li>
+            <li><a href="#menu">Our Menu</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Dining</h4>
+          <ul>
+            <li>Dine-in</li>
+            <li>Takeaway</li>
+            <li>Home Delivery</li>
+            <li>Catering</li>
+            <li>Private Events</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li>Privacy Policy</li>
+            <li>Terms of Service</li>
+            <li>Food Allergy Notice</li>
+            <li>IHG Hotels</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 Ziva All Day Dining · Holiday Inn Amritsar</p>
+        <p>Designed with ♡ for fine dining lovers</p>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#contact" class="sticky-cta">
+    <span>Reserve Table</span>
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+  </a>
+
+  <!-- ═══ JavaScript ════════════════════════════════════ -->
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Mobile menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+    mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+    // Menu tabs
+    document.querySelectorAll('.menu-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Scroll fade-in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+
+</html>
